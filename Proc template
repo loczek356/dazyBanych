@@ -1,0 +1,36 @@
+CREATE PROCEDURE dbo.usp_EnrollInCourse
+    @Email VARCHAR(255),
+    @CourseID INT,
+    @Message NVARCHAR(255) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Variable declarations
+    DECLARE
+        @UserID INT,
+        @IsActiveUser BIT,
+        @IsActiveCourse BIT,
+        @ExistingEnrolls INT,
+        @BasePrice MONEY,
+        @DiscountVal DECIMAL(10,4),
+        @DiscountType VARCHAR(50),
+        @TotalCost MONEY,
+        @AvailableSlots INT;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+
+        SET @Message = N'Success';
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK;
+
+        SET @Message = ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
